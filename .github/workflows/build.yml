@@ -28,6 +28,7 @@ jobs:
             emcc $dir/main.cpp -o $dir/main.js \
             -s EXPORTED_FUNCTIONS="['_malloc','_free','ccall','allocate','UTF8ToString','intArrayFromString']" \
             -s WASM=1
+            ls $dir
           fi
           done
 
