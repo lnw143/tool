@@ -29,11 +29,12 @@ jobs:
             -s EXPORTED_FUNCTIONS="['_malloc','_free','ccall','allocate','UTF8ToString','intArrayFromString']" \
             -s WASM=1
             ls $dir
+            git add -f $dir/main.js
+            git add -f $dir/main.wasm
           fi
           done
 
       - name: Push
         run: |
-          git add .
           git commit -m "[Github Actions] Build JS Files"
           git push
