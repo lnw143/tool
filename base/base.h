@@ -21,8 +21,8 @@ i28 qpow(i28 a,i28 n,i28 p) {
 }
 
 bool isprime(i28 n) {
-    if (n < 3)
-        return n == 2;
+    if (n <= 3)
+        return n >= 2;
     if (n % 2 == 0)
         return false;
 
