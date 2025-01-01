@@ -1,0 +1,29 @@
+{
+	"Tool Page Template": {
+		"scope": "html",
+		"prefix": ["toolpage"],
+		"body": [
+			"<!doctype html>",
+			"<html lang=\"en-us\">",
+			"\t<head>",
+			"\t\t<meta charset=\"utf-8\">",
+			"\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">",
+			"\t\t<title>$1</title>",
+			"\t\t<script async type=\"text/javascript\" src=\"./main.js\"></script>",
+			"\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"../base/style.css\">",
+			"\t\t<link rel=\"icon\" href=\"../base/favicon.svg\">",
+			"\t</head>",
+			"\t<body>",
+			"\t\t<textarea type=\"text\" id=\"input\" placeholder=",
+			"\t\t\"$2\"",
+			"\t\trows=\"10\" cols=\"40\"></textarea>",
+			"\t\t<script type=\"text/javascript\" src=\"../base/run.js\"></script>",
+			"\t\t<br> <br>",
+			"\t\t<input type=\"button\" value=\"Enter\" onclick=\"main()\" />",
+			"\t\t<br> <br>",
+			"\t\t<textarea id=\"output\" placeholder=\"Output here\" readonly rows=\"20\" cols=\"40\"></textarea>",
+			"\t</body>",
+			"</html>",
+		]
+	}
+}
