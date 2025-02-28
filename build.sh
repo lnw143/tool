@@ -2,7 +2,7 @@ source emsdk_env.sh
 
 for dir in ./*
 do
-if [[ -d "$dir" && "$dir" != "./base" ]] 
+if [[ -f "$dir/main.cpp" ]]
 then
   	echo "processing $dir"
 	emcc $dir/main.cpp -o $dir/main.js \
