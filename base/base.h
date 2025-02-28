@@ -1,5 +1,8 @@
+#ifndef DEBUG
 #include <emscripten.h>
+#endif
 #include <cstdio>
+#include <cstring>
 #include <cctype>
 #include <cassert>
 #include <algorithm>
@@ -11,8 +14,16 @@
 using namespace std;
 
 using i28 = __int128_t;
+using u28 = __uint128_t;
+using vi = vector<i28>;
 
 mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
+
+namespace algo {
+
+u28 rnd28() { return (u28(rnd())<<64)|rnd(); }
+
+i28 abs(i28 x) { return x<0?-x:x; }
 
 i28 qpow(i28 a,i28 n,i28 p) {
 	i28 x=1;
@@ -59,23 +70,52 @@ i28 gcd(i28 a,i28 b) {
 	return b?gcd(b,a%b):a;
 }
 
-i28 findroot(i28 n) {
-    i28 m = n - 1;
+i28 mul(i28 a,i28 b,i28 c) {
+    i28 x=0;
+    for(; b; b>>=1,a=a+a<c?a+a:a+a-c) if(b&1) x=x+a<c?x+a:x+a-c;
+    return x;
+}
 
-    vector<i28> factor;
-
-    for (i28 i = 2; i * i <= m; ++i) {
-        if (m % i == 0) {
-            factor.push_back(i);
-            while (m % i == 0) {
-                m /= i;
+i28 pollard_rho(i28 n) {
+    const i28 c = rnd28()%(n-1)+1;
+    for(i28 j=1,s=0,t=0,v=1; ; j<<=1,t=s,v=1) {
+        for(i28 i=0; i<j; ++i) {
+            s=mul(s,s,n)+c;
+            if(s>=n) s-=n;
+            v=mul(v,abs(t-s),n);
+            if(!v) return n;
+            if((i&127)==0) {
+                i28 d=gcd(v,n);
+                if(d>1) return d;
             }
         }
+        i28 d=gcd(v,n);
+        if(d>1) return d;
     }
+    return n;
+}
 
-    if (m > 1) {
-        factor.push_back(m);
+void get_factor(i28 x,vi &s)  {
+    if(x<4||isprime(x)) {
+        if(x>1) s.push_back(x);
+        return ;
     }
+    i28 d=x;
+    while(d==x) d=pollard_rho(x);
+    x/=d;
+    while(x%d==0) x/=d,s.push_back(d);
+    get_factor(d,s);
+    get_factor(x,s);
+}
+
+i28 findroot(i28 n) {
+    vector<i28> factor;
+
+    get_factor(n-1,factor);
+
+    sort(factor.begin(),factor.end());
+
+    factor.erase(unique(factor.begin(),factor.end()),factor.end());
 
     for (i28 i = 2; ; ++i) {
         if (gcd(i, n) == 1) {
@@ -93,6 +133,8 @@ i28 findroot(i28 n) {
     }
 }
 
+} // namespace algo
+
 namespace IO {
     char *iB;
     inline char gc() {
@@ -100,10 +142,11 @@ namespace IO {
     }
     i28 read() {
         i28 x=0;
+        bool f=0;
         char c=gc();
-        for(; !isdigit(c); c=gc());
+        for(; !isdigit(c); c=gc()) if(c=='-') f=1;
         for(; isdigit(c); c=gc()) x=x*10+c-'0';
-        return x;
+        return f?-x:x;
     }
     const char endl = '\n';
     struct Outputer {
